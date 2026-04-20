@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Our Memories Cultivates</title>
+
+<style>
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#1e1e2f,#2b5876);
+color:white;
+}
+
+header{
+text-align:center;
+padding:20px;
+background: rgba(0,0,0,0.5);
+backdrop-filter: blur(10px);
+}
+
+header h1{
+margin:0;
+font-size:40px;
+letter-spacing:2px;
+}
+
+.container{
+padding:20px;
+}
+
+/* Owner Section */
+.owner{
+text-align:center;
+margin-bottom:30px;
+}
+
+.owner img{
+width:200px;
+height:250px;
+object-fit:cover;
+border-radius:15px;
+border:3px solid white;
+}
+
+/* Upload Section */
+.upload{
+text-align:center;
+margin:20px 0;
+}
+
+.upload input{
+margin:10px;
+}
+
+/* Gallery */
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+.gallery img, .gallery video{
+width:100%;
+border-radius:10px;
+}
+
+/* Drawing Canvas */
+.canvas-container{
+text-align:center;
+margin-top:30px;
+}
+
+canvas{
+border:2px solid white;
+background:white;
+border-radius:10px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+margin:5px;
+cursor:pointer;
+background:#00c6ff;
+color:black;
+font-weight:bold;
+}
+
+button:hover{
+background:#0072ff;
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Our Memories Cultivates</h1>
+<p>Captured moments, forever alive ❤️</p>
+</header>
+
+<div class="container">
+
+<!-- OWNER -->
+<div class="owner">
+<h2>Owner</h2>
+<img src="ansh.jpeg" alt="Owner Photo">
+<p>This space belongs to the creator of memories ✨</p>
+</div>
+
+<!-- UPLOAD -->
+<div class="upload">
+<h2>Add Memories</h2>
+<input type="file" id="fileInput" multiple>
+<br>
+<button onclick="addMedia()">Upload</button>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery" id="gallery"></div>
+
+<!-- DRAWING -->
+<div class="canvas-container">
+<h2>Draw Your Memories 🎨</h2>
+<canvas id="canvas" width="400" height="300"></canvas>
+<br>
+<button onclick="clearCanvas()">Clear</button>
+<button onclick="saveCanvas()">Save Drawing</button>
+</div>
+
+</div>
+
+<script>
+const gallery = document.getElementById("gallery");
+
+function addMedia(){
+const input = document.getElementById("fileInput");
+const files = input.files;
+
+for(let file of files){
+let url = URL.createObjectURL(file);
+
+if(file.type.startsWith("image")){
+let img = document.createElement("img");
+img.src = url;
+gallery.appendChild(img);
+}
+
+else if(file.type.startsWith("video")){
+let video = document.createElement("video");
+video.src = url;
+video.controls = true;
+gallery.appendChild(video);
+}
+}
+}
+
+/* DRAWING */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let drawing = false;
+
+canvas.addEventListener("mousedown", () => drawing = true);
+canvas.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousemove", draw);
+
+function draw(e){
+if(!drawing) return;
+
+ctx.lineWidth = 3;
+ctx.lineCap = "round";
+ctx.strokeStyle = "black";
+
+ctx.lineTo(e.offsetX, e.offsetY);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function clearCanvas(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function saveCanvas(){
+let img = canvas.toDataURL("image/png");
+let newImg = document.createElement("img");
+newImg.src = img;
+gallery.appendChild(newImg);
+}
+</script>
+
+</body>
+</html>
